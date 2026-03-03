@@ -1,5 +1,5 @@
 --- ndlocr-lite/src/ocr.py	2026-03-04 01:34:52.868137682 +0900
-+++ ndlocr-lite/src/ocr.py	2026-03-04 02:44:18.698871895 +0900
++++ ndlocr-lite/src/ocr.py	2026-03-04 02:49:09.027450024 +0900
 @@ -13,6 +13,7 @@
  import time
  import shutil
@@ -65,17 +65,45 @@
          return
      
      detector=get_detector(args)
-@@ -269,10 +276,15 @@
-             }
-             alljsonstr=json.dumps(alljsonobj,ensure_ascii=False,indent=2)
-             wf.write(alljsonstr)
+@@ -255,24 +262,30 @@
+         if alllinecnt>0 and tatelinecnt/alllinecnt>0.5:
+             alltextlist=alltextlist[::-1]
+         output_stem = os.path.splitext(os.path.basename(inputpath))[0]
+-        with open(os.path.join(args.output,output_stem+".xml"),"w",encoding="utf-8") as wf:
+-            wf.write(allxmlstr)
+-        with open(os.path.join(args.output,output_stem+".json"),"w",encoding="utf-8") as wf:
+-            alljsonobj={
+-                "contents":[resjsonarray],
+-                "imginfo": {
+-                    "img_width": img_w,
+-                    "img_height": img_h,
+-                    "img_path":inputpath,
+-                    "img_name":os.path.basename(inputpath)
++        if not use_stdout:
++            with open(os.path.join(args.output,output_stem+".xml"),"w",encoding="utf-8") as wf:
++                wf.write(allxmlstr)
++            with open(os.path.join(args.output,output_stem+".json"),"w",encoding="utf-8") as wf:
++                alljsonobj={
++                    "contents":[resjsonarray],
++                    "imginfo": {
++                        "img_width": img_w,
++                        "img_height": img_h,
++                        "img_path":inputpath,
++                        "img_name":os.path.basename(inputpath)
++                    }
+                 }
+-            }
+-            alljsonstr=json.dumps(alljsonobj,ensure_ascii=False,indent=2)
+-            wf.write(alljsonstr)
 -        with open(os.path.join(args.output,output_stem+".txt"),"w",encoding="utf-8") as wtf:
 -            wtf.write("\n".join(alltextlist))
 -        print("Total calculation time (Detection + Recognition):",time.time()-start)
-+        if args.output is not None:
-+            with open(os.path.join(args.output,output_stem+".txt"),"w",encoding="utf-8") as wtf:
-+                wtf.write("\n".join(alltextlist))
++                alljsonstr=json.dumps(alljsonobj,ensure_ascii=False,indent=2)
++                wf.write(alljsonstr)
  
++            with open(os.path.join(args.output,output_stem+".txt"),"w",encoding="utf-8") as wtf:
++                    wtf.write("\n".join(alltextlist))
++
 +        if use_stdout:
 +            sys.stdout.write("\n".join(alltextlist))
 +            sys.stdout.flush()
@@ -84,8 +112,8 @@
  def main():
      import argparse
      from pathlib import Path
-@@ -281,7 +293,7 @@
-
+@@ -281,7 +294,7 @@
+ 
      parser.add_argument("--sourcedir", type=str, required=False, help="Path to image directory")
      parser.add_argument("--sourceimg", type=str, required=False, help="Path to image directory")
 -    parser.add_argument("--output", type=str, required=True, help="Path to output directory")
@@ -93,7 +121,7 @@
      parser.add_argument("--viz", type=bool, required=False, help="Save visualized image",default=False)
      parser.add_argument("--det-weights", type=str, required=False, help="Path to deim onnx file", default=str(base_dir / "model" / "deim-s-1024x1024.onnx"))
      parser.add_argument("--det-classes", type=str, required=False, help="Path to list of class in yaml file", default=str(base_dir / "config" / "ndl.yaml"))
-@@ -289,6 +301,7 @@
+@@ -289,6 +302,7 @@
      parser.add_argument("--det-conf-threshold", type=float, required=False, default=0.25)
      parser.add_argument("--det-iou-threshold", type=float, required=False, default=0.2)
      parser.add_argument("--simple-mode", type=bool, required=False, help="Read line with one model(Setting this option to True will slow down processing, but it simplifies the architecture and may slightly improve accuracy.)",default=False)
