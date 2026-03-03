@@ -105,7 +105,7 @@
 +                    wtf.write("\n".join(alltextlist))
 +
 +        if use_stdout:
-+            sys.stdout.write("\n".join(alltextlist))
++            sys.stdout.write("\n".join(alltextlist)+"\n")
 +            sys.stdout.flush()
 +        print("Total calculation time (Detection + Recognition):",time.time()-start, file=sys.stderr)
 +
