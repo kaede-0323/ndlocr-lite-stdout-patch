@@ -1,6 +1,14 @@
 --- ndlocr-lite/src/deim.py	2026-03-04 01:34:52.827773031 +0900
-+++ ndlocr-lite/src/deim.py	2026-03-04 03:35:27.994030089 +0900
-@@ -112,7 +112,7 @@
++++ ndlocr-lite/src/deim.py	2026-03-04 03:55:59.480196383 +0900
+@@ -4,6 +4,7 @@
+ import onnxruntime
+ import numpy as np
+ import cv2
++import sys
+ from typing import Tuple, List
+ import xml.etree.ElementTree as ET
+ 
+@@ -112,7 +113,7 @@
                  "pred_char_count":char_count,
                  "class_name": self.classes[class_index]#"line_main"
              })
