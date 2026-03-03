@@ -1,5 +1,5 @@
 --- ndlocr-lite/src/ocr.py	2026-03-04 01:34:52.868137682 +0900
-+++ ndlocr-lite/src/ocr.py	2026-03-04 01:51:35.346058812 +0900
++++ ndlocr-lite/src/ocr.py	2026-03-04 02:44:18.698871895 +0900
 @@ -13,6 +13,7 @@
  import time
  import shutil
@@ -84,6 +84,15 @@
  def main():
      import argparse
      from pathlib import Path
+@@ -281,7 +293,7 @@
+
+     parser.add_argument("--sourcedir", type=str, required=False, help="Path to image directory")
+     parser.add_argument("--sourceimg", type=str, required=False, help="Path to image directory")
+-    parser.add_argument("--output", type=str, required=True, help="Path to output directory")
++    parser.add_argument("--output", type=str, required=False, help="Path to output directory")
+     parser.add_argument("--viz", type=bool, required=False, help="Save visualized image",default=False)
+     parser.add_argument("--det-weights", type=str, required=False, help="Path to deim onnx file", default=str(base_dir / "model" / "deim-s-1024x1024.onnx"))
+     parser.add_argument("--det-classes", type=str, required=False, help="Path to list of class in yaml file", default=str(base_dir / "config" / "ndl.yaml"))
 @@ -289,6 +301,7 @@
      parser.add_argument("--det-conf-threshold", type=float, required=False, default=0.25)
      parser.add_argument("--det-iou-threshold", type=float, required=False, default=0.2)
